@@ -26,6 +26,7 @@ function reviewPrompt(text) {
   Each entry has following properties: 
   - “tag”: the keys and values of the osm tag as one string seperated by a "="
   - “description”: this describes the key 
+  - “emoji”: one emoji that describes the tag.
   - “help”: this explains why this helps me with my scenario. 
   Write the help text so that it relates to the scenario and not the osm tag. 
   Make it sound non technical.`;

@@ -1,10 +1,51 @@
 import { useState, useRef, useEffect } from "react";
 
-export const QueryInput = ({}) => {
+export const QueryInput = ({ setGeoData }) => {
   const textDivRef = null;
   const [productInput, setProductInput] = useState("");
   const [result, setResult] = useState(() => "");
   const [isLoading, setIsLoading] = useState(false);
+
+  function findEmoji(tags) {
+    console.log(tags, result);
+    let matchingEmoji = "";
+    for (const key in tags) {
+      const tagKey = key + "=" + tags[key];
+
+      for (const keyy in result) {
+        console.log(result[keyy], " ", tagKey);
+
+        console.log(result[keyy].tag, " ", tagKey);
+        if (result[keyy].tag.includes(tagKey)) {
+          matchingEmoji = result[keyy].emoji;
+        }
+      }
+    }
+
+    return matchingEmoji;
+  }
+
+  function parseOverpassData(d) {
+    let geoJSON = {
+      type: "FeatureCollection",
+      features: [],
+    };
+    const elements = d.elements;
+    elements.forEach((e) => {
+      const feat = {
+        type: "Feature",
+        properties: e.tags || {},
+        geometry: {
+          coordinates: [e.lon || e?.center?.lon, e.lat || e?.center?.lat],
+          type: "Point",
+        },
+      };
+      console.log("ÄÄÄÄÄÄÄÄ", e.tags);
+      feat.properties.emoji = findEmoji(e.tags);
+      geoJSON.features.push(feat);
+    });
+    setGeoData(geoJSON.features);
+  }
 
   function queryOverpass(d) {
     const data = JSON.parse(d);
@@ -24,10 +65,13 @@ export const QueryInput = ({}) => {
 
     const query = baseUrl + tagQuerries + endURL;
 
+    console.log("query", query);
+
     fetch(query)
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
+        parseOverpassData(data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -36,6 +80,7 @@ export const QueryInput = ({}) => {
 
   async function onSubmit(event) {
     event.preventDefault();
+
     setIsLoading(true);
     const response = await fetch("/api/test", {
       method: "POST",
@@ -49,8 +94,28 @@ export const QueryInput = ({}) => {
     console.log("data.result", data.result);
 
     let rawResult = data.result;
-
     console.log("rawResult", rawResult);
+
+    // let rawResult = {
+    //   amenity: {
+    //     tag: "amenity=theatre",
+    //     description: "A place where people can watch performances",
+    //     emoji: "🎭",
+    //     help: "Going to the theatre is a great way to get out of the house and enjoy some entertainment. ",
+    //   },
+    //   leisure: {
+    //     tag: "leisure=playground",
+    //     description: "A place for children to play",
+    //     emoji: "🤸",
+    //     help: "Heading to the playground is a great way to get some exercise, have some fun and meet new people. ",
+    //   },
+    //   shop: {
+    //     tag: "shop=comic_book",
+    //     description: "A shop that sells comic books",
+    //     emoji: "📖",
+    //     help: "Checking out a comic book store is a great way to get your imagination going and explore some new stories. ",
+    //   },
+    // };
 
     // set result to the highlighted code. Address this error: Argument of type 'string' is not assignable to parameter of type '(prevState: undefined) => undefined'.ts(2345)
     setResult(rawResult);
