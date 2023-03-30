@@ -6,6 +6,34 @@ export const QueryInput = ({}) => {
   const [result, setResult] = useState(() => "");
   const [isLoading, setIsLoading] = useState(false);
 
+  function queryOverpass(d) {
+    const data = JSON.parse(d);
+    const baseUrl =
+      "https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(";
+    const bbox =
+      "52.52804962287233,13.376691341400146,52.53917045060706,13.388965129852295";
+
+    let tagQuerries = "";
+    for (const property in data) {
+      const tag = data[property].tag;
+      const tagQuery = `node[${tag}](${bbox});way[${tag}](${bbox});relation[${tag}](${bbox});`;
+      tagQuerries += tagQuery;
+    }
+
+    const endURL = `);out center;`;
+
+    const query = baseUrl + tagQuerries + endURL;
+
+    fetch(query)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   async function onSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
@@ -27,6 +55,8 @@ export const QueryInput = ({}) => {
     // set result to the highlighted code. Address this error: Argument of type 'string' is not assignable to parameter of type '(prevState: undefined) => undefined'.ts(2345)
     setResult(rawResult);
 
+    queryOverpass(rawResult);
+
     setProductInput("");
     setIsLoading(false);
   }
@@ -37,12 +67,7 @@ export const QueryInput = ({}) => {
         className="flex flex-col 
                     items-center justify-center m-20"
       >
-        <h3 className="text-slate-900 text-xl mb-3">
-          Product Review Generator
-        </h3>
-        <p className="text-slate-700 text-lg mb-3">
-          Open AI starter app to generate product reviews
-        </p>
+        <h3 className="text-slate-900 text-xl mb-3">Kiez Kompass</h3>
         <form onSubmit={onSubmit}>
           <input
             className="text-sm text-gray-base w-full 
@@ -60,7 +85,7 @@ export const QueryInput = ({}) => {
                               rounded-2xl mb-10"
             type="submit"
           >
-            Generate article
+            Run Query
           </button>
         </form>
         {isLoading ? (

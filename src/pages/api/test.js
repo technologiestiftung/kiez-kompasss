@@ -19,5 +19,14 @@ export default async function (req, res) {
 }
 
 function reviewPrompt(text) {
-  return `${text}`;
+  return `Give me 3 osm tags in Berlin that are related to the following scenario: "${text}". At least 2 tags should be an unexpected answer.
+
+  Return the results as a JSON. 
+  Use the tags as keys. 
+  Each entry has following properties: 
+  - “tag”: the keys and values of the osm tag as one string seperated by a "="
+  - “description”: this describes the key 
+  - “help”: this explains why this helps me with my scenario. 
+  Write the help text so that it relates to the scenario and not the osm tag. 
+  Make it sound non technical.`;
 }
