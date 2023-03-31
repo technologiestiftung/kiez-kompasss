@@ -26,6 +26,7 @@ export const MapComponent = ({ markerData, setQueryBounds }) => {
       return;
     }
     setMapZoom(mapRef.current.getZoom());
+    setQueryBounds(mapRef.current.getBounds().toArray());
 
     // if (hasMobileSize) {
     //   const map = mapRef.current.getMap();
