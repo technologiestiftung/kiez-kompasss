@@ -112,7 +112,7 @@ export const QueryInput = ({
 		// set result to the highlighted code. Address this error: Argument of type 'string' is not assignable to parameter of type '(prevState: undefined) => undefined'.ts(2345)
 		setResultGPT(data.result);
 
-		setProductInput('');
+		// setProductInput('');
 		setIsLoading(false);
 	}
 

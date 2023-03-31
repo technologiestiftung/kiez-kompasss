@@ -36,6 +36,7 @@ export default function Home() {
 					productInput={productInput}
 					setProductInput={setProductInput}
 				/>
+				<p className="italic text-lg">"{productInput}"</p>
 				<GptResults
 					resultGPT={resultGPT}
 					geoData={geoData}

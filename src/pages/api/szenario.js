@@ -19,7 +19,7 @@ export default async function (req, res) {
 function reviewPrompt(text, data) {
 	return `You are assistant: You can only answer in JSON.
   
-  Choose from the data below and the follwing scenario "${text}" the best result and explain your choice. Answer in german.
+  Choose from the data below (ignoring the property "coordinates") and the follwing scenario "${text}" the best result and explain your choice. Answer in german.
 
   ${JSON.stringify(data)}
 
