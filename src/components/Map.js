@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useCallback, useMemo } from "react";
-import Map, { Source, Layer, Marker } from "react-map-gl";
+import Map, { Source, Layer, Marker, Popup } from "react-map-gl";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import mapStyle from "./mapStyle";
@@ -11,6 +11,9 @@ import { layerStyles } from "./layerStyles";
 
 export const MapComponent = ({ markerData, setQueryBounds }) => {
   const [mapZoom, setMapZoom] = useState(10);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupText, setPopupText] = useState("");
+  const [popupCoo, setPopupCoo] = useState([0, 0]);
 
   const mapRef = useRef();
   const startMapView = {
@@ -45,6 +48,14 @@ export const MapComponent = ({ markerData, setQueryBounds }) => {
     }
   }, [mapZoom]);
 
+  const showPopupNow = (visible, data) => {
+    setPopupVisible(visible);
+    if (visible && data) {
+      setPopupText(JSON.stringify(data.properties));
+      setPopupCoo([data.geometry.coordinates[1], data.geometry.coordinates[0]]);
+    }
+  };
+
   const markers = useMemo(
     () =>
       markerData.map((feature) => (
@@ -68,6 +79,8 @@ export const MapComponent = ({ markerData, setQueryBounds }) => {
             className={
               "w-10 h-10 bg-white/90 rounded-full text-2xl text-center align-middle self-center inline p-2"
             }
+            onMouseEnter={() => showPopupNow(true, feature)}
+            onMouseOut={() => showPopupNow(false, false)}
             // width="20px"
           >
             {feature.properties.emoji}
@@ -110,6 +123,16 @@ export const MapComponent = ({ markerData, setQueryBounds }) => {
         onLoad={onMapLoad}
       >
         {markers}
+        {popupVisible && (
+          <Popup
+            longitude={popupCoo[1]}
+            latitude={popupCoo[0]}
+            closeButton={false}
+            anchor={"bottom"}
+          >
+            {popupText}
+          </Popup>
+        )}
       </Map>
       {/* <MapNav mapZoom={mapZoom} setMapZoom={setMapZoom} /> */}
       <div>
