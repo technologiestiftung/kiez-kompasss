@@ -3,21 +3,20 @@ import { useState, useRef, useEffect } from "react";
 export const QueryInput = ({ setGeoData }) => {
   const textDivRef = null;
   const [productInput, setProductInput] = useState("");
-  const [result, setResult] = useState(() => "");
+  const [resultGPT, setResultGPT] = useState(() => "");
   const [isLoading, setIsLoading] = useState(false);
 
   function findEmoji(tags) {
-    console.log(tags, result);
+    const resultGPTParsed = JSON.parse(resultGPT);
+
     let matchingEmoji = "";
     for (const key in tags) {
       const tagKey = key + "=" + tags[key];
 
-      for (const keyy in result) {
-        console.log(result[keyy], " ", tagKey);
-
-        console.log(result[keyy].tag, " ", tagKey);
-        if (result[keyy].tag.includes(tagKey)) {
-          matchingEmoji = result[keyy].emoji;
+      for (const keyy in resultGPTParsed) {
+        if (resultGPTParsed[keyy].tag.includes(tagKey)) {
+          matchingEmoji = resultGPTParsed[keyy].emoji;
+          console.log("match", matchingEmoji, tagKey);
         }
       }
     }
@@ -53,19 +52,15 @@ export const QueryInput = ({ setGeoData }) => {
       "https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(";
     const bbox =
       "52.52804962287233,13.376691341400146,52.53917045060706,13.388965129852295";
-
     let tagQuerries = "";
     for (const property in data) {
       const tag = data[property].tag;
       const tagQuery = `node[${tag}](${bbox});way[${tag}](${bbox});relation[${tag}](${bbox});`;
       tagQuerries += tagQuery;
     }
-
     const endURL = `);out center;`;
-
     const query = baseUrl + tagQuerries + endURL;
-
-    console.log("query", query);
+    console.log("overpass query", query);
 
     fetch(query)
       .then((response) => response.json())
@@ -77,6 +72,12 @@ export const QueryInput = ({ setGeoData }) => {
         console.error("Error:", error);
       });
   }
+
+  useEffect(() => {
+    if (resultGPT) {
+      queryOverpass(resultGPT);
+    }
+  }, [resultGPT]);
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -90,37 +91,9 @@ export const QueryInput = ({ setGeoData }) => {
       body: JSON.stringify({ product: productInput }),
     });
     const data = await response.json();
-    console.log("data", data);
-    console.log("data.result", data.result);
-
-    let rawResult = data.result;
-    console.log("rawResult", rawResult);
-
-    // let rawResult = {
-    //   amenity: {
-    //     tag: "amenity=theatre",
-    //     description: "A place where people can watch performances",
-    //     emoji: "🎭",
-    //     help: "Going to the theatre is a great way to get out of the house and enjoy some entertainment. ",
-    //   },
-    //   leisure: {
-    //     tag: "leisure=playground",
-    //     description: "A place for children to play",
-    //     emoji: "🤸",
-    //     help: "Heading to the playground is a great way to get some exercise, have some fun and meet new people. ",
-    //   },
-    //   shop: {
-    //     tag: "shop=comic_book",
-    //     description: "A shop that sells comic books",
-    //     emoji: "📖",
-    //     help: "Checking out a comic book store is a great way to get your imagination going and explore some new stories. ",
-    //   },
-    // };
-
+    console.log("GPT results:", data.result);
     // set result to the highlighted code. Address this error: Argument of type 'string' is not assignable to parameter of type '(prevState: undefined) => undefined'.ts(2345)
-    setResult(rawResult);
-
-    queryOverpass(rawResult);
+    setResultGPT(data.result);
 
     setProductInput("");
     setIsLoading(false);
@@ -155,7 +128,7 @@ export const QueryInput = ({ setGeoData }) => {
         </form>
         {isLoading ? (
           <p>Loading... be patient.. may take 30s+</p>
-        ) : result ? (
+        ) : resultGPT ? (
           <div className="relative w-2/4 ">
             <div
               ref={textDivRef}
@@ -164,7 +137,9 @@ export const QueryInput = ({ setGeoData }) => {
               <pre className="">
                 <code
                   className=""
-                  dangerouslySetInnerHTML={{ __html: result }}
+                  dangerouslySetInnerHTML={{
+                    __html: resultGPT,
+                  }}
                 />
               </pre>
             </div>
