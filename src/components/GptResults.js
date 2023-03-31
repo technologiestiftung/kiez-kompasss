@@ -17,11 +17,8 @@ export const GptResults = ({ resultGPT }) => {
 
       {resultGPTParsed && (
         <ul>
-          {Object.keys(resultGPTParsed).map((item) => (
-            <li
-              className="flex py-2"
-              // key={`${item.id}`}
-            >
+          {Object.keys(resultGPTParsed).map((item, i) => (
+            <li className="flex py-2" key={`${"item-" + i}`}>
               <p className="mr-2 text-2xl p-2 w-10 h-10 border rounded-full justify-center items-center tex-center flex">
                 {resultGPTParsed[item].emoji}
               </p>
