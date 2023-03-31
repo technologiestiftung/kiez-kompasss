@@ -1,24 +1,23 @@
-// @ts-check
-import { useCookies } from "../hooks/useCookies";
-import { useState, useRef, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useCookies } from '../hooks/useCookies';
+import { useState, useRef, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 export const QueryInput = ({
 	setGeoData,
 	queryBounds,
 	resultGPT,
 	setResultGPT,
 }) => {
-	const [sessionID, setSessionID] = useCookies("kiez-kompasss", null);
+	const [sessionID, setSessionID] = useCookies('kiez-kompasss', null);
 	const textDivRef = null;
-	const [productInput, setProductInput] = useState("");
+	const [productInput, setProductInput] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 
 	function findEmoji(tags) {
 		const resultGPTParsed = JSON.parse(resultGPT);
 
-		let matchingEmoji = "";
+		let matchingEmoji = '';
 		for (const key in tags) {
-			const tagKey = key + "=" + tags[key];
+			const tagKey = key + '=' + tags[key];
 
 			for (const keyy in resultGPTParsed) {
 				if (resultGPTParsed[keyy].tag.includes(tagKey)) {
@@ -32,17 +31,17 @@ export const QueryInput = ({
 
 	function parseOverpassData(d) {
 		let geoJSON = {
-			type: "FeatureCollection",
+			type: 'FeatureCollection',
 			features: [],
 		};
 		const elements = d.elements;
 		elements.forEach((e) => {
 			const feat = {
-				type: "Feature",
+				type: 'Feature',
 				properties: e.tags || {},
 				geometry: {
 					coordinates: [e.lon || e?.center?.lon, e.lat || e?.center?.lat],
-					type: "Point",
+					type: 'Point',
 				},
 			};
 			feat.properties.emoji = findEmoji(e.tags);
@@ -52,16 +51,16 @@ export const QueryInput = ({
 	}
 
 	function queryOverpass(d) {
-		console.log("query overpass", d);
+		console.log('query overpass', d);
 		let data;
 		try {
 			data = JSON.parse(d);
 		} catch (e) {
-			console.log("error parsing GPT result", e);
+			console.log('error parsing GPT result', e);
 			return;
 		}
 		const baseUrl =
-			"https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(";
+			'https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(';
 		let bbox = [
 			queryBounds[0][1],
 			queryBounds[0][0],
@@ -69,7 +68,7 @@ export const QueryInput = ({
 			queryBounds[1][0],
 		].toString();
 
-		let tagQuerries = "";
+		let tagQuerries = '';
 		for (const property in data) {
 			const tag = data[property].tag;
 			const tagQuery = `node[${tag}](${bbox});way[${tag}](${bbox});relation[${tag}](${bbox});`;
@@ -77,16 +76,16 @@ export const QueryInput = ({
 		}
 		const endURL = `);out center;`;
 		const query = baseUrl + tagQuerries + endURL;
-		console.log("overpass query", query);
+		console.log('overpass query', query);
 
 		fetch(query)
 			.then((response) => response.json())
 			.then((data) => {
-				console.log("Success:", data);
+				console.log('Success:', data);
 				parseOverpassData(data);
 			})
 			.catch((error) => {
-				console.error("Error:", error);
+				console.error('Error:', error);
 			});
 	}
 
@@ -106,20 +105,20 @@ export const QueryInput = ({
 		event.preventDefault();
 
 		setIsLoading(true);
-		const response = await fetch("/api/gpt", {
-			method: "POST",
+		const response = await fetch('/api/gpt', {
+			method: 'POST',
 			headers: {
-				"Content-Type": "application/json",
-				"x-session-id": sessionID ?? "unknown",
+				'Content-Type': 'application/json',
+				'x-session-id': sessionID ?? 'unknown',
 			},
 			body: JSON.stringify({ product: productInput }),
 		});
 		const data = await response.json();
-		console.log("GPT results:", data.result);
+		console.log('GPT results:', data.result);
 		// set result to the highlighted code. Address this error: Argument of type 'string' is not assignable to parameter of type '(prevState: undefined) => undefined'.ts(2345)
 		setResultGPT(data.result);
 
-		setProductInput("");
+		setProductInput('');
 		setIsLoading(false);
 	}
 
