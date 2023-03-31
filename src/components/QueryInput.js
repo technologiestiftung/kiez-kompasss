@@ -2,30 +2,29 @@ import { useCookies } from '../hooks/useCookies';
 import { useState, useRef, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 export const QueryInput = ({
-  setGeoData,
-  queryBounds,
-  resultGPT,
-  setResultGPT,
-  productInput,
-  setProductInput,
+	setGeoData,
+	queryBounds,
+	resultGPT,
+	setResultGPT,
+	productInput,
+	setProductInput,
 }) => {
 	const [sessionID, setSessionID] = useCookies('kiez-kompasss', null);
 	const textDivRef = null;
-	const [productInput, setProductInput] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 
 	function findEmoji(tags) {
-		const resultGPTParsed = JSON.parse(resultGPT);
+		const resultGPTParsed = resultGPT;
 
 		let matchingEmoji = '';
 		for (const key in tags) {
 			const tagKey = key + '=' + tags[key];
 
-			for (const keyy in resultGPTParsed) {
-				if (resultGPTParsed[keyy].tag.includes(tagKey)) {
-					matchingEmoji = resultGPTParsed[keyy].emoji;
+			resultGPTParsed.forEach((d) => {
+				if (d.tag.includes(tagKey)) {
+					matchingEmoji = d.emoji;
 				}
-			}
+			});
 		}
 
 		return matchingEmoji;
@@ -52,15 +51,7 @@ export const QueryInput = ({
 		setGeoData(geoJSON.features);
 	}
 
-	function queryOverpass(d) {
-		console.log('query overpass', d);
-		let data;
-		try {
-			data = JSON.parse(d);
-		} catch (e) {
-			console.log('error parsing GPT result', e);
-			return;
-		}
+	function queryOverpass(data) {
 		const baseUrl =
 			'https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(';
 		let bbox = [
@@ -71,11 +62,11 @@ export const QueryInput = ({
 		].toString();
 
 		let tagQuerries = '';
-		for (const property in data) {
-			const tag = data[property].tag;
+		data.forEach((d) => {
+			const tag = d.tag[0];
 			const tagQuery = `node[${tag}](${bbox});way[${tag}](${bbox});relation[${tag}](${bbox});`;
 			tagQuerries += tagQuery;
-		}
+		});
 		const endURL = `);out center;`;
 		const query = baseUrl + tagQuerries + endURL;
 		console.log('overpass query', query);
@@ -96,6 +87,7 @@ export const QueryInput = ({
 			queryOverpass(resultGPT);
 		}
 	}, [resultGPT]);
+
 	useEffect(() => {
 		if (!sessionID) {
 			const newSessionID = uuidv4(); // Generate a new UUID
@@ -124,25 +116,25 @@ export const QueryInput = ({
 		setIsLoading(false);
 	}
 
-  return (
-    <div>
-      <main
-        className="flex flex-col 
+	return (
+		<div>
+			<main
+				className="flex flex-col 
                     items-center justify-center m-20"
-      >
-        <h3 className="text-slate-900 text-xl mb-3">Kiez Kompass 🧭</h3>
-        <p>Wohin mit Oma?</p>
-        <form onSubmit={onSubmit}>
-          <input
-            className="text-sm text-gray-base w-full 
+			>
+				<h3 className="text-slate-900 text-xl mb-3">Kiez Kompass 🧭</h3>
+				<p>Wohin mit Oma?</p>
+				<form onSubmit={onSubmit}>
+					<input
+						className="text-sm text-gray-base w-full 
                               mr-3 py-5 px-4 h-2 border 
                               border-gray-200 rounded mb-2"
-            type="text"
-            name="product"
-            placeholder="Suche nach ..."
-            value={productInput}
-            onChange={(e) => setProductInput(e.target.value)}
-          />
+						type="text"
+						name="product"
+						placeholder="Suche nach ..."
+						value={productInput}
+						onChange={(e) => setProductInput(e.target.value)}
+					/>
 
 					<button
 						className="w-full mb-10 text-sm text-white bg-fuchsia-600 h-7 rounded-2xl"

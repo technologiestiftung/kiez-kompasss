@@ -1,9 +1,9 @@
-import { supabase } from "./_supabase";
-import { Configuration, OpenAIApi } from "openai";
-import { VercelRequest, VercelResponse } from "@vercel/node";
-import { Database } from "./_supabase/Database";
+import { supabase } from './_supabase';
+import { Configuration, OpenAIApi } from 'openai';
+import { VercelRequest, VercelResponse } from '@vercel/node';
+import { Database } from './_supabase/Database';
 
-type Request = Database["public"]["Tables"]["requests"]["Insert"];
+type Request = Database['public']['Tables']['requests']['Insert'];
 const configuration = new Configuration({
 	apiKey: process.env.NEXT_PUBLIC_OPEN_AI_KEY,
 });
@@ -11,14 +11,14 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 export default async function handler(req: VercelRequest, res: VercelResponse) {
 	try {
-		const sessionId = req.headers["x-session-id"];
+		const sessionId = req.headers['x-session-id'];
 		const completion = await openai.createCompletion({
-			model: "text-davinci-003",
+			model: 'text-davinci-003',
 			prompt: reviewPrompt(req.body.product),
 			max_tokens: 2000,
 			temperature: 0.6,
 		});
-		console.log("completion", completion.data.choices[0].text);
+		console.log('completion', completion.data.choices[0].text);
 		if (!completion.data.choices[0] || !completion.data.choices[0].text) {
 			return;
 		}
@@ -26,17 +26,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 		data.forEach((d) => {
 			d.session_id = sessionId as string;
 		});
-		console.log(data, "data after parse");
+		console.log(data, 'data after parse');
 		const { error: supabaseError } = await supabase
-			.from("requests")
+			.from('requests')
 			.insert(data);
 		if (supabaseError) {
-			console.error("error while writing to the database", supabaseError);
+			console.error('error while writing to the database', supabaseError);
 		}
 
-		res.status(200).json({ result: completion.data.choices[0].text });
+		res.status(200).json({ result: data });
 	} catch (e) {
-		console.error("error", e);
+		console.error('error', e);
 		res.status(500).json({ error: e });
 	}
 }
