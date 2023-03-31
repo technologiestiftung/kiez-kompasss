@@ -28,6 +28,7 @@ export const GptResults = ({ resultGPT, geoData, productInput }) => {
 				if (d.properties.description) {
 					entry.description = d.properties.description;
 				}
+				filteredgeoData.push(entry);
 			}
 		});
 		const response = await fetch('/api/szenario', {
