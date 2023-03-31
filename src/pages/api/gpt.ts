@@ -25,6 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 		let data = JSON.parse(completion.data.choices[0].text) as Request[];
 		data.forEach((d) => {
 			d.session_id = sessionId as string;
+			d.search_query = req.body.product;
 		});
 		console.log(data, 'data after parse');
 		const { error: supabaseError } = await supabase
