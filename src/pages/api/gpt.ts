@@ -44,7 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 function reviewPrompt(text: string) {
 	return `You are assistant: A smart OSM query builder JSON api. You can only answer in JSON.
 
-	Give me 3 osm tags in Berlin that are related to the following scenario: ${text}. At least 2 tags should be an unexpected answer. The texts will be in german.
+	Give me 3 osm tags in Berlin that are related to the following scenario: ${text}. At least 2 tags should be an unexpected answer. Only use tags from openstreetmap.org. The texts will be in german.
 
   Return the results as a JSON array.
   Each entry has following properties:

@@ -13,15 +13,18 @@ export default async function (req, res) {
 		max_tokens: 2000,
 		temperature: 0.6,
 	});
-	res.status(200).json({ result: completion.data.choices[0].text });
+	res.status(200).json({ result: JSON.parse(completion.data.choices[0].text) });
 }
 
 function reviewPrompt(text, data) {
-	return `
+	return `You are assistant: You can only answer in JSON.
   
-  Suche aus den folgenden Daten und dem Szenario "${text}" das Beste Resultat und sage warum du dich dafür entschieden hast. 
-  
+  Choose from the data below and the follwing scenario "${text}" the best result and explain your choice. Answer in german.
+
   ${JSON.stringify(data)}
-  
+
+  Return the results as a JSON with the following properties:
+  "coordinates": the coordinates from the option
+  "explanation": Your explanation
   `;
 }

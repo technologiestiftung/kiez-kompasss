@@ -122,8 +122,8 @@ export const QueryInput = ({
 				className="flex flex-col 
                     items-center justify-center m-20"
 			>
-				<h3 className="text-slate-900 text-xl mb-3">Kiez Kompass 🧭</h3>
-				<p>Wohin mit Oma?</p>
+				<h3 className="text-slate-900 text-xl mb-3">K.I.ez Guide 🧭</h3>
+				<p>Versuch doch mal: Wohin mit Oma?</p>
 				<form onSubmit={onSubmit}>
 					<input
 						className="text-sm text-gray-base w-full 
@@ -144,7 +144,7 @@ export const QueryInput = ({
 					</button>
 				</form>
 				{isLoading ? (
-					<p>Loading... be patient.. may take 30s+</p>
+					<p>Lade deine Antwort...</p>
 				) : resultGPT ? (
 					<div className="relative w-2/4 ">
 						{/* <div

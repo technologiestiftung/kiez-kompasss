@@ -38,7 +38,7 @@ export default function Home() {
 					geoData={geoData}
 					productInput={productInput}
 				/>
-				<div className="w-3/4 h-[400px] pb-4">
+				<div className="w-3/4 h-[400px] pb-8">
 					<MapComponent markerData={geoData} setQueryBounds={setQueryBounds} />
 				</div>
 			</main>

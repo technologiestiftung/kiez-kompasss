@@ -22,12 +22,17 @@ export const GptResults = ({ resultGPT, geoData, productInput }) => {
 		geoData.forEach((d) => {
 			const entry = {};
 			if (d.properties.emoji == emoji) {
-				if (d.properties.name) {
-					entry.name = d.properties.name;
-				}
-				if (d.properties.description) {
-					entry.description = d.properties.description;
-				}
+				entry.name = d.properties?.name;
+				entry.description = d.properties?.description;
+				// entry.wheelchair = d.properties?.wheelchair;
+				entry.coordinates = d.geometry?.coordinates;
+
+				// if (d.properties.name) {
+				// 	entry.name = d.properties?.name;
+				// }
+				// if (d.properties.description) {
+				// 	entry.description = d.properties.description;
+				// }
 				filteredgeoData.push(entry);
 			}
 		});
@@ -45,7 +50,7 @@ export const GptResults = ({ resultGPT, geoData, productInput }) => {
 
 		setIsLoading(false);
 
-		setResultSzenarioText(data.result);
+		setResultSzenarioText(data.result.explanation);
 
 		console.log(data);
 	}
@@ -78,7 +83,7 @@ export const GptResults = ({ resultGPT, geoData, productInput }) => {
 
 					{isLoading ? <p>Loading...</p> : null}
 
-					{resultSzenarioText ? (
+					{resultSzenarioText && !isLoading ? (
 						<p className="py-4">{resultSzenarioText}</p>
 					) : null}
 				</>
