@@ -1,6 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 
-export const GptResults = ({ resultGPT, geoData, productInput }) => {
+export const GptResults = ({
+	resultGPT,
+	geoData,
+	productInput,
+	setResultSzenarioCoordinates,
+}) => {
 	const [resultGPTParsed, setResultGPTParsed] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [resultSzenarioText, setResultSzenarioText] = useState(false);
@@ -51,6 +56,7 @@ export const GptResults = ({ resultGPT, geoData, productInput }) => {
 		setIsLoading(false);
 
 		setResultSzenarioText(data.result.explanation);
+		setResultSzenarioCoordinates(data.result.coordinates);
 
 		console.log(data);
 	}

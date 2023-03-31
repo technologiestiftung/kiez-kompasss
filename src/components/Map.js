@@ -9,7 +9,11 @@ import { layerStyles } from './layerStyles';
 
 // import { useHasMobileSize } from "@lib/hooks/useHasMobileSize";
 
-export const MapComponent = ({ markerData, setQueryBounds }) => {
+export const MapComponent = ({
+	markerData,
+	setQueryBounds,
+	resultSzenarioCoordinates,
+}) => {
 	const [mapZoom, setMapZoom] = useState(10);
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [popupText, setPopupText] = useState('');
@@ -47,6 +51,30 @@ export const MapComponent = ({ markerData, setQueryBounds }) => {
 			}
 		}
 	}, [mapZoom]);
+
+	useEffect(() => {
+		if (mapRef.current) {
+			// @ts-ignore
+			// if (mapRef.current.getZoom() !== mapZoom) {
+			// 	// @ts-ignore
+			// 	mapRef.current.zoomTo(mapZoom, {
+			// 		duration: 200,
+			// 	});
+			// }
+
+			mapRef.current.getMap().flyTo({
+				center: resultSzenarioCoordinates,
+				zoom: 15,
+				speed: 0.8,
+				curve: 1,
+				easing(t) {
+					return t;
+				},
+			});
+
+			resultSzenarioCoordinates;
+		}
+	}, [resultSzenarioCoordinates]);
 
 	const showPopupNow = (visible, data) => {
 		setPopupVisible(visible);
