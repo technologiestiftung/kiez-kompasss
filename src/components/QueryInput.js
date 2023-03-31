@@ -2,10 +2,12 @@ import { useCookies } from '../hooks/useCookies';
 import { useState, useRef, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 export const QueryInput = ({
-	setGeoData,
-	queryBounds,
-	resultGPT,
-	setResultGPT,
+  setGeoData,
+  queryBounds,
+  resultGPT,
+  setResultGPT,
+  productInput,
+  setProductInput,
 }) => {
 	const [sessionID, setSessionID] = useCookies('kiez-kompasss', null);
 	const textDivRef = null;
@@ -122,19 +124,25 @@ export const QueryInput = ({
 		setIsLoading(false);
 	}
 
-	return (
-		<div>
-			<main className="flex flex-col items-center justify-center m-20">
-				<h3 className="mb-3 text-xl text-slate-900">Kiez Kompass 🧭</h3>
-				<form onSubmit={onSubmit}>
-					<input
-						className="w-full h-2 px-4 py-5 mb-2 mr-3 text-sm border border-gray-200 rounded text-gray-base"
-						type="text"
-						name="product"
-						placeholder="Suche nach ..."
-						value={productInput}
-						onChange={(e) => setProductInput(e.target.value)}
-					/>
+  return (
+    <div>
+      <main
+        className="flex flex-col 
+                    items-center justify-center m-20"
+      >
+        <h3 className="text-slate-900 text-xl mb-3">Kiez Kompass 🧭</h3>
+        <p>Wohin mit Oma?</p>
+        <form onSubmit={onSubmit}>
+          <input
+            className="text-sm text-gray-base w-full 
+                              mr-3 py-5 px-4 h-2 border 
+                              border-gray-200 rounded mb-2"
+            type="text"
+            name="product"
+            placeholder="Suche nach ..."
+            value={productInput}
+            onChange={(e) => setProductInput(e.target.value)}
+          />
 
 					<button
 						className="w-full mb-10 text-sm text-white bg-fuchsia-600 h-7 rounded-2xl"
@@ -148,6 +156,19 @@ export const QueryInput = ({
 				) : resultGPT ? (
 					<div className="relative w-2/4 ">
 						{/* <div
+          <button
+            className="text-sm w-full bg-fuchsia-600 h-7 text-white
+                              rounded-2xl mb-10"
+            type="submit"
+          >
+            Run Query
+          </button>
+        </form>
+        {isLoading ? (
+          <p>Loading... be patient.. may take 30s+</p>
+        ) : resultGPT ? (
+          <div className="relative w-2/4 ">
+            {/* <div
               ref={textDivRef}
               className="overflow-x-auto break-words rounded-md border-spacing-2 border-slate-900 bg-slate-100 max-w-500 "
             >

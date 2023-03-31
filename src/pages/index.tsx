@@ -13,6 +13,7 @@ export default function Home() {
   const [geoData, setGeoData] = useState([]);
   const [queryBounds, setQueryBounds] = useState([]);
   const [resultGPT, setResultGPT] = useState(() => "");
+  const [productInput, setProductInput] = useState("");
 
   return (
     <>
@@ -29,9 +30,15 @@ export default function Home() {
           queryBounds={queryBounds}
           resultGPT={resultGPT}
           setResultGPT={setResultGPT}
+          productInput={productInput}
+          setProductInput={setProductInput}
         />
-        <GptResults resultGPT={resultGPT} />
-        <div className="w-3/4 h-[400px]">
+        <GptResults
+          resultGPT={resultGPT}
+          geoData={geoData}
+          productInput={productInput}
+        />
+        <div className="w-3/4 h-[400px] pb-4">
           <MapComponent markerData={geoData} setQueryBounds={setQueryBounds} />
         </div>
       </main>
