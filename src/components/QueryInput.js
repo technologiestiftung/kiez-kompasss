@@ -1,9 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 
-export const QueryInput = ({ setGeoData }) => {
+export const QueryInput = ({
+  setGeoData,
+  queryBounds,
+  resultGPT,
+  setResultGPT,
+}) => {
   const textDivRef = null;
   const [productInput, setProductInput] = useState("");
-  const [resultGPT, setResultGPT] = useState(() => "");
   const [isLoading, setIsLoading] = useState(false);
 
   function findEmoji(tags) {
@@ -16,7 +20,6 @@ export const QueryInput = ({ setGeoData }) => {
       for (const keyy in resultGPTParsed) {
         if (resultGPTParsed[keyy].tag.includes(tagKey)) {
           matchingEmoji = resultGPTParsed[keyy].emoji;
-          console.log("match", matchingEmoji, tagKey);
         }
       }
     }
@@ -39,7 +42,6 @@ export const QueryInput = ({ setGeoData }) => {
           type: "Point",
         },
       };
-      console.log("ÄÄÄÄÄÄÄÄ", e.tags);
       feat.properties.emoji = findEmoji(e.tags);
       geoJSON.features.push(feat);
     });
@@ -50,8 +52,13 @@ export const QueryInput = ({ setGeoData }) => {
     const data = JSON.parse(d);
     const baseUrl =
       "https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(";
-    const bbox =
-      "52.52804962287233,13.376691341400146,52.53917045060706,13.388965129852295";
+    let bbox = [
+      queryBounds[0][1],
+      queryBounds[0][0],
+      queryBounds[1][1],
+      queryBounds[1][0],
+    ].toString();
+
     let tagQuerries = "";
     for (const property in data) {
       const tag = data[property].tag;
@@ -105,7 +112,7 @@ export const QueryInput = ({ setGeoData }) => {
         className="flex flex-col 
                     items-center justify-center m-20"
       >
-        <h3 className="text-slate-900 text-xl mb-3">Kiez Kompass</h3>
+        <h3 className="text-slate-900 text-xl mb-3">Kiez Kompass 🧭</h3>
         <form onSubmit={onSubmit}>
           <input
             className="text-sm text-gray-base w-full 
@@ -113,7 +120,7 @@ export const QueryInput = ({ setGeoData }) => {
                               border-gray-200 rounded mb-2"
             type="text"
             name="product"
-            placeholder="Enter a product name"
+            placeholder="Suche nach ..."
             value={productInput}
             onChange={(e) => setProductInput(e.target.value)}
           />
@@ -130,7 +137,7 @@ export const QueryInput = ({ setGeoData }) => {
           <p>Loading... be patient.. may take 30s+</p>
         ) : resultGPT ? (
           <div className="relative w-2/4 ">
-            <div
+            {/* <div
               ref={textDivRef}
               className="rounded-md border-spacing-2 border-slate-900 bg-slate-100 break-words max-w-500 overflow-x-auto  "
             >
@@ -160,7 +167,7 @@ export const QueryInput = ({ setGeoData }) => {
                 <rect x="8" y="8" width="12" height="12" rx="2"></rect>
                 <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
               </svg>
-            </div>
+            </div> */}
           </div>
         ) : null}
       </main>

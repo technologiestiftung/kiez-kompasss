@@ -9,7 +9,7 @@ import { layerStyles } from "./layerStyles";
 
 // import { useHasMobileSize } from "@lib/hooks/useHasMobileSize";
 
-export const MapComponent = ({ markerData }) => {
+export const MapComponent = ({ markerData, setQueryBounds }) => {
   const [mapZoom, setMapZoom] = useState(10);
 
   const mapRef = useRef();
@@ -64,7 +64,9 @@ export const MapComponent = ({ markerData }) => {
             //   feature.inaktiv ? "./stern_inaktiv.png" : "./stern_leuchtend.png"
             // }
             title={JSON.stringify(feature.properties)}
-            className={"w-5 h-5 bg-black/50 rounded-full text-xl"}
+            className={
+              "w-10 h-10 bg-white/90 rounded-full text-2xl text-center align-middle self-center inline p-2"
+            }
             // width="20px"
           >
             {feature.properties.emoji}
@@ -75,19 +77,28 @@ export const MapComponent = ({ markerData }) => {
     [markerData]
   );
 
+  function onMapMove() {
+    setQueryBounds(mapRef.current.getBounds().toArray());
+    console.log(mapRef.current.getBounds().toArray());
+  }
+
   return (
-    <div className="h-screen w-screen">
+    <div className="h-full w-full">
       <Map
         mapLib={maplibregl}
         initialViewState={{ ...startMapView }}
         mapStyle={mapStyle()}
         // onClick={onMapCLick}
         // onMouseMove={onMapCLick}
+        onMoveEnd={onMapMove}
         // @ts-ignore
         ref={mapRef}
         bounds={[
-          12.777342808197773, 52.129092675117505, 14.009067613750716,
-          52.86814653557087,
+          //   12.777342808197773, 52.129092675117505, 14.009067613750716,
+          //   52.86814653557087,
+
+          13.376691341400146, 52.52804962287233, 13.388965129852295,
+          52.53917045060706,
         ]}
         maxBounds={[
           11.82943127508483, 51.74832292717255, 15.046752480983088,
