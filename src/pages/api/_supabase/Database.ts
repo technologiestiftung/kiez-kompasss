@@ -40,6 +40,7 @@ export interface Database {
           emoji: string | null
           help: string | null
           id: number
+          search_query: string | null
           session_id: string | null
           tag: string[] | null
         }
@@ -48,6 +49,7 @@ export interface Database {
           emoji?: string | null
           help?: string | null
           id?: number
+          search_query?: string | null
           session_id?: string | null
           tag?: string[] | null
         }
@@ -56,6 +58,7 @@ export interface Database {
           emoji?: string | null
           help?: string | null
           id?: number
+          search_query?: string | null
           session_id?: string | null
           tag?: string[] | null
         }
