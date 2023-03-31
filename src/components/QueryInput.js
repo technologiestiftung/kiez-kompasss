@@ -5,9 +5,10 @@ export const QueryInput = ({
   queryBounds,
   resultGPT,
   setResultGPT,
+  productInput,
+  setProductInput,
 }) => {
   const textDivRef = null;
-  const [productInput, setProductInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   function findEmoji(tags) {
@@ -113,6 +114,7 @@ export const QueryInput = ({
                     items-center justify-center m-20"
       >
         <h3 className="text-slate-900 text-xl mb-3">Kiez Kompass 🧭</h3>
+        <p>Wohin mit Oma?</p>
         <form onSubmit={onSubmit}>
           <input
             className="text-sm text-gray-base w-full 
