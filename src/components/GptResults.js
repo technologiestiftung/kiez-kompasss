@@ -66,7 +66,8 @@ export const GptResults = ({
 			{resultGPTParsed && (
 				<>
 					<h3 className="py-4 font-bold">
-						Hier sind ein paar Sachen die du machen könntest. Suche dir ein aus:
+						Hier sind ein paar Sachen die du machen könntest. Such dir doch was
+						aus:
 					</h3>
 
 					<ul>

@@ -122,8 +122,13 @@ export const QueryInput = ({
 				className="flex flex-col 
                     items-center justify-center m-20"
 			>
-				<h3 className="text-slate-900 text-xl mb-3">K.I.ez Guide 🧭</h3>
-				<p>Versuch doch mal: Wohin mit Oma?</p>
+				<p>Versuch doch mal:</p>
+				<ul className="pb-2">
+					<li className="italic">
+						Ich habe kein Geld. Was kann ich heute schönes machen?
+					</li>
+					<li className="italic">Wohin mit Oma?</li>
+				</ul>
 				<form onSubmit={onSubmit}>
 					<input
 						className="text-sm text-gray-base w-full 
