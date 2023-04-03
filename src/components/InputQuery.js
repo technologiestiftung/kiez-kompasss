@@ -1,8 +1,8 @@
 import { useCookies } from '../hooks/useCookies';
 import { useState, useRef, useEffect } from 'react';
 import getOverpassData from 'src/lib/getOverpassData';
-
 import { v4 as uuidv4 } from 'uuid';
+
 export const InputQuery = ({
 	setGeoData,
 	queryBounds,
@@ -43,6 +43,7 @@ export const InputQuery = ({
 			return;
 		}
 
+		// now get the data from Overpass too
 		const overpassData = await getOverpassData(tagData?.result, queryBounds);
 		if (overpassData.error) {
 			setErrorText(overpassData.error);
@@ -50,7 +51,7 @@ export const InputQuery = ({
 		}
 		setGeoData(overpassData.data);
 
-		// remove the tags that have no geodata
+		// filter the tags that have no geodata
 		const filteredTags = [];
 		tagData?.result.forEach((tag) => {
 			let tagExists = false;
