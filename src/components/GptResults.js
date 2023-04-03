@@ -41,7 +41,7 @@ export const GptResults = ({
 				filteredgeoData.push(entry);
 			}
 		});
-		const response = await fetch('/api/szenario', {
+		const response = await fetch('/api/getSzenario', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

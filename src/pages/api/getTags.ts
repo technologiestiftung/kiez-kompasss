@@ -28,13 +28,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 			d.search_query = req.body.product;
 		});
 		console.log(data, 'data after parse');
-		const { error: supabaseError } = await supabase
-			.from('requests')
-			.insert(data);
-		if (supabaseError) {
-			console.error('error while writing to the database', supabaseError);
+		if (process.env.NODE_ENV !== 'development') {
+			console.log('writing request to db');
+			const { error: supabaseError } = await supabase
+				.from('requests')
+				.insert(data);
+			if (supabaseError) {
+				console.error('error while writing to the database', supabaseError);
+			}
 		}
-
 		res.status(200).json({ result: data });
 	} catch (e) {
 		console.error('error', e);

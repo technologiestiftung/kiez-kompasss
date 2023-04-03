@@ -99,7 +99,7 @@ export const QueryInput = ({
 		event.preventDefault();
 
 		setIsLoading(true);
-		const response = await fetch('/api/gpt', {
+		const response = await fetch('/api/getTags', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
