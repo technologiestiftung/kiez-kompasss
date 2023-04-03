@@ -6,27 +6,20 @@ import mapStyle from './mapStyle';
 import { useState } from 'react';
 // import { layerStyles } from './layerStyles';
 // import { MapNav } from "@components/MapNav";
-
 // import { useHasMobileSize } from "@lib/hooks/useHasMobileSize";
 
-export const MapComponent = ({
-	markerData,
-	setQueryBounds,
-	resultSzenarioCoordinates,
-}) => {
+export const MapComponent = ({ markerData, setQueryBounds, bestPlace }) => {
 	const [mapZoom, setMapZoom] = useState(10);
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [popupText, setPopupText] = useState('');
 	const [popupCoo, setPopupCoo] = useState([0, 0]);
 
 	const mapRef = useRef();
-	const startMapView = {
-		longitude: 13.341760020413858,
-		latitude: 52.510831578689704,
-		zoom: mapZoom,
-	};
-
-	//   const hasMobileSize = useHasMobileSize();
+	// const startMapView = {
+	// 	longitude: 13.341760020413858,
+	// 	latitude: 52.510831578689704,
+	// 	zoom: mapZoom,
+	// };
 
 	const onMapLoad = (e) => {
 		if (!mapRef || !mapRef.current) {
@@ -48,9 +41,9 @@ export const MapComponent = ({
 	}, [mapZoom]);
 
 	useEffect(() => {
-		if (mapRef.current) {
+		if (mapRef.current && bestPlace.length) {
 			mapRef.current.getMap().flyTo({
-				center: resultSzenarioCoordinates,
+				center: bestPlace,
 				zoom: 15,
 				speed: 0.8,
 				curve: 1,
@@ -59,9 +52,9 @@ export const MapComponent = ({
 				},
 			});
 
-			resultSzenarioCoordinates;
+			bestPlace;
 		}
-	}, [resultSzenarioCoordinates]);
+	}, [bestPlace]);
 
 	const showPopupNow = (visible, data) => {
 		setPopupVisible(visible);
@@ -96,7 +89,7 @@ export const MapComponent = ({
 						onMouseOut={() => showPopupNow(false, false)}
 						// width="20px"
 					>
-						{feature.properties.emoji}
+						{feature.properties.tagEmoji}
 					</div>
 				</Marker>
 			)),
@@ -106,13 +99,14 @@ export const MapComponent = ({
 
 	function onMapMove() {
 		setQueryBounds(mapRef.current.getBounds().toArray());
+		console.log(mapRef.current.getBounds().toArray());
 	}
 
 	return (
 		<div className="h-full w-full">
 			<Map
 				mapLib={maplibregl}
-				initialViewState={{ ...startMapView }}
+				// initialViewState={{ ...startMapView }}
 				mapStyle={mapStyle()}
 				// onClick={onMapCLick}
 				// onMouseMove={onMapCLick}
@@ -120,8 +114,8 @@ export const MapComponent = ({
 				// @ts-ignore
 				ref={mapRef}
 				bounds={[
-					13.376691341400146, 52.52804962287233, 13.388965129852295,
-					52.53917045060706,
+					13.369469093449368, 52.47928572015417, 13.408318208820788,
+					52.490418892100735,
 				]}
 				maxBounds={[
 					11.82943127508483, 51.74832292717255, 15.046752480983088,
@@ -131,6 +125,15 @@ export const MapComponent = ({
 				interactiveLayerIds={['stations']}
 				onLoad={onMapLoad}
 			>
+				{bestPlace.length && (
+					<Marker
+						longitude={bestPlace[0]}
+						latitude={bestPlace[1]}
+						anchor="center"
+					>
+						<div className="bg-none border-2 border-black w-14 h-14 rounded-full"></div>
+					</Marker>
+				)}
 				{markers}
 				{popupVisible && (
 					<Popup

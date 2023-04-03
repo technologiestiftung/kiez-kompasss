@@ -1,9 +1,9 @@
 import Head from 'next/head';
 // import Image from "next/image";
 import { Inter } from 'next/font/google';
-import { QueryInput } from '../components/QueryInput';
+import { InputQuery } from '../components/InputQuery';
 import { MapComponent } from '../components/Map/Map';
-import { GptResults } from '../components/GptResults';
+import { ListSuggestions } from '../components/ListSuggestions';
 
 import { useState, useRef, useEffect } from 'react';
 
@@ -15,10 +15,7 @@ export default function Home() {
 	const [queryBounds, setQueryBounds] = useState([]);
 	const [resultGPT, setResultGPT] = useState(null);
 	const [errorText, setErrorText] = useState(null);
-
-	const [resultSzenarioCoordinates, setResultSzenarioCoordinates] = useState(
-		[]
-	);
+	const [bestPlace, setBestPlace] = useState([]);
 
 	return (
 		<>
@@ -29,30 +26,31 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main className="flex flex-col items-center">
-				<h3 className="text-slate-900 text-xl mb-3">K.I.ez Guide 🧭</h3>
-				<QueryInput
+				<h3 className="text-slate-900 text-xl my-6">K.I.ez Guide 🧭</h3>
+				<InputQuery
 					setGeoData={setGeoData}
 					queryBounds={queryBounds}
-					resultGPT={resultGPT}
 					setResultGPT={setResultGPT}
 					textInput={textInput}
 					setTextInput={setTextInput}
 					setErrorText={setErrorText}
 				/>
 				<p className="italic text-lg">"{textInput}"</p>
-				<GptResults
+				<ListSuggestions
 					resultGPT={resultGPT}
 					geoData={geoData}
 					textInput={textInput}
-					setResultSzenarioCoordinates={setResultSzenarioCoordinates}
+					setBestPlace={setBestPlace}
+					setResultGPT={setResultGPT}
 				/>
 				<div className="w-3/4 h-[400px] pb-8">
 					<MapComponent
 						markerData={geoData}
 						setQueryBounds={setQueryBounds}
-						resultSzenarioCoordinates={resultSzenarioCoordinates}
+						bestPlace={bestPlace}
 					/>
 				</div>
+				{errorText ? <p>errorText: {errorText}</p> : null}
 			</main>
 		</>
 	);

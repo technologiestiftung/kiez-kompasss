@@ -26,5 +26,6 @@ function reviewPrompt(text, data) {
   Return the results as a JSON with the following properties:
   "coordinates": the coordinates from the option
   "explanation": Your explanation
+  "joke": an intersting fact that relates to your explanation. This text is in German.
   `;
 }
