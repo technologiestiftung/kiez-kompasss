@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 export const GptResults = ({
 	resultGPT,
 	geoData,
-	productInput,
+	textInput,
 	setResultSzenarioCoordinates,
 }) => {
 	const [resultGPTParsed, setResultGPTParsed] = useState(null);
@@ -47,7 +47,7 @@ export const GptResults = ({
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				szenarioText: productInput,
+				szenarioText: textInput,
 				data: filteredgeoData,
 			}),
 		});

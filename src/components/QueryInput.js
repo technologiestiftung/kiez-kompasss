@@ -6,8 +6,9 @@ export const QueryInput = ({
 	queryBounds,
 	resultGPT,
 	setResultGPT,
-	productInput,
-	setProductInput,
+	textInput,
+	setTextInput,
+	setErrorText,
 }) => {
 	const [sessionID, setSessionID] = useCookies('kiez-kompasss', null);
 	const textDivRef = null;
@@ -79,6 +80,9 @@ export const QueryInput = ({
 			})
 			.catch((error) => {
 				console.error('Error:', error);
+				setErrorText(
+					'Entschuldige, etwas lief bei der Abfrage schief. Versuch es nochmal'
+				);
 			});
 	}
 
@@ -105,14 +109,14 @@ export const QueryInput = ({
 				'Content-Type': 'application/json',
 				'x-session-id': sessionID ?? 'unknown',
 			},
-			body: JSON.stringify({ product: productInput }),
+			body: JSON.stringify({ product: textInput }),
 		});
 		const data = await response.json();
 		console.log('GPT results:', data.result);
 		// set result to the highlighted code. Address this error: Argument of type 'string' is not assignable to parameter of type '(prevState: undefined) => undefined'.ts(2345)
 		setResultGPT(data.result);
 
-		// setProductInput('');
+		// setTextInput('');
 		setIsLoading(false);
 	}
 
@@ -137,8 +141,8 @@ export const QueryInput = ({
 						type="text"
 						name="product"
 						placeholder="Suche nach ..."
-						value={productInput}
-						onChange={(e) => setProductInput(e.target.value)}
+						value={textInput}
+						onChange={(e) => setTextInput(e.target.value)}
 					/>
 
 					<button
@@ -149,54 +153,7 @@ export const QueryInput = ({
 					</button>
 				</form>
 				{isLoading ? (
-					<p>Lade deine Antwort...</p>
-				) : resultGPT ? (
-					<div className="relative w-2/4 ">
-						{/* <div
-          <button
-            className="text-sm w-full bg-fuchsia-600 h-7 text-white
-                              rounded-2xl mb-10"
-            type="submit"
-          >
-            Run Query
-          </button>
-        </form>
-        {isLoading ? (
-          <p>Loading... be patient.. may take 30s+</p>
-        ) : resultGPT ? (
-          <div className="relative w-2/4 ">
-            {/* <div
-              ref={textDivRef}
-              className="overflow-x-auto break-words rounded-md border-spacing-2 border-slate-900 bg-slate-100 max-w-500 "
-            >
-              <pre className="">
-                <code
-                  className=""
-                  dangerouslySetInnerHTML={{
-                    __html: resultGPT,
-                  }}
-                />
-              </pre>
-            </div>
-            <div className="absolute top-0 right-0 mt-2 mr-2 cursor-pointer copy-icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="icon icon-tabler icon-tabler-copy"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-                stroke="currentColor"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <rect x="8" y="8" width="12" height="12" rx="2"></rect>
-                <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
-              </svg>
-            </div> */}
-					</div>
+					<p>Hmm, warte mal. Darüber muss ich etwas nachdenken...</p>
 				) : null}
 			</main>
 		</div>

@@ -4,7 +4,7 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import mapStyle from './mapStyle';
 import { useState } from 'react';
-import { layerStyles } from './layerStyles';
+// import { layerStyles } from './layerStyles';
 // import { MapNav } from "@components/MapNav";
 
 // import { useHasMobileSize } from "@lib/hooks/useHasMobileSize";
@@ -34,11 +34,6 @@ export const MapComponent = ({
 		}
 		setMapZoom(mapRef.current.getZoom());
 		setQueryBounds(mapRef.current.getBounds().toArray());
-
-		// if (hasMobileSize) {
-		//   const map = mapRef.current.getMap();
-		//   map.scrollZoom.disable();
-		// }
 	};
 	useEffect(() => {
 		if (mapRef.current) {
@@ -54,14 +49,6 @@ export const MapComponent = ({
 
 	useEffect(() => {
 		if (mapRef.current) {
-			// @ts-ignore
-			// if (mapRef.current.getZoom() !== mapZoom) {
-			// 	// @ts-ignore
-			// 	mapRef.current.zoomTo(mapZoom, {
-			// 		duration: 200,
-			// 	});
-			// }
-
 			mapRef.current.getMap().flyTo({
 				center: resultSzenarioCoordinates,
 				zoom: 15,
@@ -86,15 +73,13 @@ export const MapComponent = ({
 
 	const markers = useMemo(
 		() =>
-			markerData.map((feature) => (
+			markerData.map((feature, i) => (
 				<Marker
 					longitude={feature.geometry.coordinates[0]}
 					latitude={feature.geometry.coordinates[1]}
 					anchor="center"
 					//   onClick={() => onMarkerCLick(feature)}
-					key={
-						feature.geometry.coordinates[0] + feature.geometry.coordinates[1]
-					}
+					key={`marker-${i}`}
 					//   style={{ opacity: feature.inaktiv ? 0.5 : 1, cursor: "pointer" }}
 				>
 					<div
@@ -135,9 +120,6 @@ export const MapComponent = ({
 				// @ts-ignore
 				ref={mapRef}
 				bounds={[
-					//   12.777342808197773, 52.129092675117505, 14.009067613750716,
-					//   52.86814653557087,
-
 					13.376691341400146, 52.52804962287233, 13.388965129852295,
 					52.53917045060706,
 				]}

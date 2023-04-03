@@ -2,7 +2,7 @@ import Head from 'next/head';
 // import Image from "next/image";
 import { Inter } from 'next/font/google';
 import { QueryInput } from '../components/QueryInput';
-import { MapComponent } from '../components/Map';
+import { MapComponent } from '../components/Map/Map';
 import { GptResults } from '../components/GptResults';
 
 import { useState, useRef, useEffect } from 'react';
@@ -10,10 +10,12 @@ import { useState, useRef, useEffect } from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
+	const [textInput, setTextInput] = useState('');
 	const [geoData, setGeoData] = useState([]);
 	const [queryBounds, setQueryBounds] = useState([]);
 	const [resultGPT, setResultGPT] = useState(null);
-	const [productInput, setProductInput] = useState('');
+	const [errorText, setErrorText] = useState(null);
+
 	const [resultSzenarioCoordinates, setResultSzenarioCoordinates] = useState(
 		[]
 	);
@@ -33,14 +35,15 @@ export default function Home() {
 					queryBounds={queryBounds}
 					resultGPT={resultGPT}
 					setResultGPT={setResultGPT}
-					productInput={productInput}
-					setProductInput={setProductInput}
+					textInput={textInput}
+					setTextInput={setTextInput}
+					setErrorText={setErrorText}
 				/>
-				<p className="italic text-lg">"{productInput}"</p>
+				<p className="italic text-lg">"{textInput}"</p>
 				<GptResults
 					resultGPT={resultGPT}
 					geoData={geoData}
-					productInput={productInput}
+					textInput={textInput}
 					setResultSzenarioCoordinates={setResultSzenarioCoordinates}
 				/>
 				<div className="w-3/4 h-[400px] pb-8">
