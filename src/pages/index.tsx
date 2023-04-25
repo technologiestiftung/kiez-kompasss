@@ -26,7 +26,7 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main className="flex flex-col items-center">
-				<h3 className="text-slate-900 text-xl my-6">K.I.ez Guide 🧭</h3>
+				<h3 className="text-slate-900 text-3xl my-12 font-bold">K.I.ez Guide 🧭</h3>
 				<InputQuery
 					setGeoData={setGeoData}
 					queryBounds={queryBounds}
@@ -35,6 +35,13 @@ export default function Home() {
 					setTextInput={setTextInput}
 					setErrorText={setErrorText}
 				/>
+				<div className="w-full h-[400px] pb-8">
+					<MapComponent
+						markerData={geoData}
+						setQueryBounds={setQueryBounds}
+						bestPlace={bestPlace}
+					/>
+				</div>
 				<p className="italic text-lg">"{textInput}"</p>
 				<ListSuggestions
 					resultGPT={resultGPT}
@@ -43,13 +50,6 @@ export default function Home() {
 					setBestPlace={setBestPlace}
 					setResultGPT={setResultGPT}
 				/>
-				<div className="w-3/4 h-[400px] pb-8">
-					<MapComponent
-						markerData={geoData}
-						setQueryBounds={setQueryBounds}
-						bestPlace={bestPlace}
-					/>
-				</div>
 				{errorText ? <p>errorText: {errorText}</p> : null}
 			</main>
 		</>

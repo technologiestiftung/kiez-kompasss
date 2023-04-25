@@ -67,36 +67,43 @@ export const InputQuery = ({
 	}
 
 	return (
-		<div>
-			<p>Versuch doch mal:</p>
+		<div className="w-1/3">
+			{/* <p>Versuch doch mal:</p>
 			<ul className="py-2">
 				<li className="italic">
 					* "Ich habe kein Geld. Was kann ich heute schönes machen?""
 				</li>
 				<li className="italic">* "Wohin mit Oma?"</li>
-			</ul>
+			</ul> */}
 			<form onSubmit={onSubmit}>
 				<input
-					className="text-sm text-gray-base w-full 
-                              mr-3 py-5 px-4 h-2 border 
-                              border-gray-200 rounded mb-2"
+					className="text-md placeholder-lightblue w-full 
+                              mr-3 py-5 px-4 h-2 border-2 
+                              border-black rounded-3xl mb-2"
 					type="text"
 					name="product"
-					placeholder="Suche nach ..."
+					placeholder="Was möchtest du machen?"
 					value={textInput}
 					onChange={(e) => setTextInput(e.target.value)}
 				/>
-
 				<button
-					className="w-full mb-10 text-sm text-white bg-fuchsia-600 h-7 rounded-2xl"
+					className="w-1/5 ml-12 mt-6 text-sm text-white bg-magenta font-national h-10 rounded-sm float-left"
 					type="submit"
 				>
-					Fragen
+					FRAGEN
+				</button>
+				<button
+					className="w-1/5 mr-12 mt-6 text-sm text-white bg-magenta font-national h-10 rounded-sm float-right"
+					type="reset"
+				>
+					ZUFALLSFRAGE
 				</button>
 			</form>
+			<div class= 'mt-24 h-10'>
 			{isLoading ? (
 				<p>Hmm, warte mal. Darüber muss ich etwas nachdenken...</p>
-			) : null}
+			) : <p>{textInput}</p>}
+			</div>
 		</div>
 	);
 };

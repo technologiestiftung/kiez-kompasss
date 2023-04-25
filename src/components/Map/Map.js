@@ -107,7 +107,12 @@ export const MapComponent = ({ markerData, setQueryBounds, bestPlace }) => {
 			<Map
 				mapLib={maplibregl}
 				// initialViewState={{ ...startMapView }}
-				mapStyle={mapStyle()}
+				mapStyle={
+					// process.env.NODE_ENV == ‘development’
+        //   ? mapStyle()
+        //   :
+       		 	`${process.env.NEXT_PUBLIC_MAPTILER_STYLE}`
+				}
 				// onClick={onMapCLick}
 				// onMouseMove={onMapCLick}
 				onMoveEnd={onMapMove}

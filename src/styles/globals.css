@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "National";
+    src: url("../../src/fonts/National-Book.otf");
+  }
+@font-face {
+  font-family: "NationalBold";
+  src: url("../../src/fonts/National-Bold.otf");
+}
